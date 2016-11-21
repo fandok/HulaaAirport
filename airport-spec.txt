@@ -1,0 +1,28 @@
+Airport API
+
+1. GET /timezone?iata=[string]
+   { "airport": [iata], "timezone": [timezone] }
+
+2. GET /city?iata=[string]
+   { "airport": [iata], "city": [city] }
+
+2. GET /airports?domestic=true
+   { "airports": ["CGK", "HLP", "KNO", ...], "domestic": true }
+
+3. GET /airport/[iata]/is-domestic
+   { "airport": [iata], "isDomestic": [boolean] }
+
+Airport:
+{ "id": [iata], "timezone": [string], "city": [string], "domestic": boolean }
+
+def prosesNama = Action.async { implicit request =>
+    Future.successful{
+      request.body.asJson match {
+        case None       => BadRequest("JSON tidak ditemukan")
+        case Some(json) => json.validate[Nama] match {
+          case s: JsSuccess[Nama] => Ok(Json.toJson(s.get))
+          case e: JsError          => BadRequest(e.errors.toString)
+        }
+      }
+    }
+  }
